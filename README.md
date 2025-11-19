@@ -1,54 +1,147 @@
-# Base Symfony prête à l'emploi
+# 📚 **Leaf — Library Management System**
 
-## Fonctionnalités incluses
-- Symfony 7
-- Support Twig (templates)
-- Doctrine ORM (base de données)
-- Configuration .env pour la connexion MySQL
-
-## Configuration de la base de données
-
-Modifiez le fichier `.env` pour adapter la connexion à votre base MySQL :
-
-```
-DATABASE_URL="mysql://utilisateur:motdepasse@127.0.0.1:3306/nom_bdd?serverVersion=8.0.32&charset=utf8mb4"
-```
-
-Par défaut :
-```
-DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=8.0.32&charset=utf8mb4"
-```
-
-Créez la base de données (après avoir adapté le .env) :
-
-```
-php bin/console doctrine:database:create
-```
-
-## Lancer le serveur de développement
-
-```
-symfony serve
-```
-
-Ou avec PHP :
-```
-php -S localhost:8000 -t public
-```
-
-## Générer une entité et migrer
-
-```
-php bin/console make:entity
-php bin/console make:migration
-php bin/console doctrine:migrations:migrate
-```
-
-## Accès Twig
-Les templates sont dans le dossier `/templates`.
+**Application Symfony de gestion de bibliothèque**
+Emprunts • Retours • Caution • Pénalités • Paiements • Catalogue • Rôles
 
 ---
 
-**NB :**
-- Le mot de passe et le nom de la base sont à adapter à votre environnement.
-- Pour installer le CLI Symfony : https://symfony.com/download
+## ⭐ **Description**
+
+**Leaf** est une application web développée avec **Symfony** permettant de gérer une bibliothèque de manière simple et robuste :
+
+* Gestion complète des livres et catégories
+* Emprunts / retours
+* Gestion de la caution et pénalités
+* Suivi des paiements
+* Rôles (User / Admin) et permissions
+* Interface admin + interface utilisateur
+
+Pensé pour être propre, scalable et pédagogique.
+
+---
+
+# 🚀 **1. Installation**
+
+## 📦 **Prérequis**
+
+* PHP 8.2+
+* Composer
+* MySQL 8+
+* Symfony CLI
+
+---
+
+## 🛠️ **Installation du projet**
+
+### 1️⃣ Cloner le projet
+
+```bash
+git clone https://github.com/ton-compte/leaf-library.git
+cd leaf-library
+```
+
+### 2️⃣ Installer les dépendances
+
+```bash
+composer install
+```
+
+### 3️⃣ Configurer les variables d’environnement
+
+Copie le fichier d’exemple :
+
+```bash
+cp .env.example .env.local
+```
+
+Puis remplis `.env.local` avec tes informations.
+
+### 4️⃣ Créer la base de données
+
+```bash
+php bin/console doctrine:database:create
+```
+
+---
+
+# 🔐 **2. Variables d’environnement**
+
+Leaf n’inclut **aucune information sensible** dans le dépôt.
+
+### ✔️ Fichier présent dans le repo
+
+* `.env.example` → modèle sans données
+
+### 📌 Exemple de `.env.example`
+
+```env
+### Leaf Library - Environment Example ###
+### Copy this file to .env.local and fill the values ###
+
+APP_ENV=dev
+APP_SECRET=
+
+DATABASE_URL="mysql://USER:PASSWORD@127.0.0.1:3306/leaf"
+
+APP_TIMEZONE=Europe/Paris
+```
+
+---
+
+
+### 📦 **Stack technique**
+
+* Symfony 7
+* Doctrine ORM
+* Twig
+* Bootstrap / Tailwind
+* Symfony Security
+
+---
+
+# 📚 **4. Fonctionnalités**
+
+## 👤 Utilisateur
+
+* Voir les livres
+* Filtrer par catégorie / état
+* Emprunter un livre
+* Voir ses emprunts
+* Rendre un livre
+* Voir ses paiements / pénalités
+
+## 🛠 Administrateur
+
+* CRUD livres / catégories
+* Gestion des statuts et conditions
+* Valider un retour
+* Définir l’état du livre (bon / abîmé / perdu)
+* Gérer les cautions
+* Gérer les paiements
+
+---
+
+
+
+# 🧪 **8. Tests**
+
+Lancer les tests :
+
+```bash
+php bin/phpunit
+```
+
+---
+
+# 🚀 **9. Lancer le serveur**
+
+```bash
+symfony serve
+```
+
+
+# 👤 **Auteur**
+
+Développé par **Lucas Raffalli**
+Projet scolaire — Concepteur Web / Développeur Fullstack
+
