@@ -48,7 +48,6 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // Redirection vers le dashboard après connexion réussie
         return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
     }
 

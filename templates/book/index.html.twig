@@ -4,13 +4,11 @@
 {% endblock %}
 
 {% block admin_content %}
-	{# Page Header #}
 	<div class="mb-8">
-		<h1 class="text-3xl font-black text-color-900 uppercase tracking-tight">📚 Gestion des Livres</h1>
+		<h1 class="text-3xl font-black text-color-900 uppercase tracking-tight">Gestion des Livres</h1>
 		<p class="mt-2 text-color-600">Gérez votre collection de livres</p>
 	</div>
 
-	{# Action Bar #}
 	<div class="flex justify-between items-center mb-6">
 		<p class="text-color-600">
 			<span class="font-semibold text-color-900">{{ books|length }}</span>
@@ -24,7 +22,6 @@
 		</a>
 	</div>
 
-	{# Books Grid #}
 	{% if books|length > 0 %}
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 			{% for book in books %}

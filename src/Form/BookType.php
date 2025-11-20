@@ -20,12 +20,6 @@ class BookType extends AbstractType
             ->add('author')
             ->add('depositAmount')
             ->add('isArchived')
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('updatedAt', null, [
-                'widget' => 'single_text',
-            ])
             ->add('status', EntityType::class, [
                 'class' => BookStatus::class,
                 'choice_label' => 'name',

@@ -22,7 +22,6 @@ class Role
     private ?string $description = null;
 
 
-    // Les utilisateurs qui ont ce rôle - côté inverse de la relation ManyToMany
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'userRoles')]
     private Collection $users;
 

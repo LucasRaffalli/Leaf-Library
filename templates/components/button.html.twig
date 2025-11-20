@@ -1,4 +1,3 @@
-{# Usage: {% include 'components/button.html.twig' with { variant: 'outline', text: 'Click Me', url: '#' } %} #}
 {% set variant = variant|default('fill') %}
 {% set text = text|default('Button') %}
 {% set url = url|default('#') %}
@@ -6,18 +5,22 @@
 
 {% if type == 'submit' %}
   <button type="submit"
-    class=" cursor-pointer px-4 py-2 rounded-md font-medium text-center inline-block transition-colors duration-300 {% if variant == 'fill' %}
+    class="cursor-pointer px-4 py-2 rounded-md font-medium text-center inline-block transition-colors duration-300 {% if variant == 'fill' %}
 
     {% elseif variant == 'outline' %}
+
+    {% elseif variant == 'null' %}
 
     {% endif %}">
     {{ text }}
   </button>
 {% else %}
   <a href="{{ url }}"
-    class="cursor-pointer px-4 py-2 rounded-md font-medium text-center inline-block transition-colors duration-300{% if variant == 'fill' %}
+    class="cursor-pointer px-4 py-2 rounded-md font-medium text-center inline-block transition-colors duration-300 {% if variant == 'fill' %}
 
     {% elseif variant == 'outline' %}
+
+    {% elseif variant == 'null' %}
 
     {% endif %}">
     {{ text }}

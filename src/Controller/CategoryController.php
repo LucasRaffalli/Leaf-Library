@@ -53,7 +53,6 @@ final class CategoryController extends AbstractController
     #[Route('/{id}/edit', name: 'app_category_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Category $category, EntityManagerInterface $entityManager): Response
     {
-        // Store original books before form handling
         $originalBooks = new \Doctrine\Common\Collections\ArrayCollection();
         foreach ($category->getBooks() as $book) {
             $originalBooks->add($book);
@@ -63,17 +62,14 @@ final class CategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Get the submitted books from the form
             $submittedBooks = $form->get('books')->getData();
 
-            // Remove this category from books that were removed
             foreach ($originalBooks as $book) {
                 if (!$submittedBooks->contains($book)) {
                     $book->removeCategory($category);
                 }
             }
 
-            // Add this category to books that were added
             foreach ($submittedBooks as $book) {
                 if (!$originalBooks->contains($book)) {
                     $book->addCategory($category);

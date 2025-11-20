@@ -8,7 +8,6 @@
 {% block admin_content %}
 	<div
 		class="h-screen">
-		<!-- Header -->
 		<header class="bg-white shadow">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div class="flex justify-between items-center py-6">
@@ -25,7 +24,6 @@
 
 		<main
 			class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-			<!-- Form Card -->
 			<div class="bg-white shadow rounded-lg overflow-hidden">
 				<div class="px-6 py-6">
 					<div class="flex items-center justify-between mb-6">
@@ -40,10 +38,9 @@
 						</div>
 					</div>
 
-					{{ include('category/_form.html.twig', {'button_label': '✅ Mettre à jour'}) }}
+					{{ include('category/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 				</div>
 
-				<!-- Danger Zone -->
 				<div class="bg-red-50 border-t border-red-200 px-6 py-4">
 					<div class="flex items-center justify-between">
 						<div>

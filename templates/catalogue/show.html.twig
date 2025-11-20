@@ -6,16 +6,13 @@
 	</div>
 </div>
 
-<!-- Informations du livre -->
 <div class="lg:col-span-2">
 	<h1 class="text-3xl font-bold text-color-900 mb-4">{{ book.title }}</h1>
 	<p class="text-xl text-color-600 mb-6">par
 		{{ book.author }}</p>
 
-	<!-- Informations détaillées -->
 	<div
 		class="space-y-4">
-		<!-- Statut -->
 		<div>
 			<label class="block text-sm font-medium text-color-700 mb-1">Statut</label>
 			<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
@@ -29,13 +26,11 @@
 			</span>
 		</div>
 
-		<!-- Condition -->
 		<div>
 			<label class="block text-sm font-medium text-color-700 mb-1">État</label>
 			<p class="text-color-900">{{ book.condition.name }}</p>
 		</div>
 
-		<!-- Catégories -->
 		<div>
 			<label class="block text-sm font-medium text-color-700 mb-1">Catégories</label>
 			<div class="flex flex-wrap gap-2">
@@ -47,13 +42,11 @@
 			</div>
 		</div>
 
-		<!-- Montant de caution -->
 		<div>
 			<label class="block text-sm font-medium text-color-700 mb-1">Caution</label>
 			<p class="text-lg font-semibold text-color-900">{{ book.depositAmount }}€</p>
 		</div>
 
-		<!-- Dates -->
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 			<div>
 				<label class="block text-sm font-medium text-color-700 mb-1">Ajouté le</label>
@@ -66,7 +59,6 @@
 		</div>
 	</div>
 
-	<!-- Actions -->
 	<div class="mt-8 flex space-x-4">
 		{% if book.status.name == 'Disponible' and app.user %}
 			<button class="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors" onclick="alert('Fonctionnalité d\'emprunt à venir!')">

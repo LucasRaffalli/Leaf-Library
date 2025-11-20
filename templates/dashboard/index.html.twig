@@ -6,23 +6,18 @@
 {% block body %}
 	<div
 		class="min-h-screen bg-color-50">
-		{# User Navbar #}
 		{% include 'components/user_navbar.html.twig' %}
 
-		{# Main Content Area #}
 		<main
 			class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-			{# Page Header #}
 			<div class="mb-8">
 				<h1 class="text-3xl font-black text-color-900 uppercase tracking-tight">👋 Bienvenue,
 					{{ user.name ?? user.email }}</h1>
 				<p class="mt-2 text-color-600">Votre espace personnel</p>
 			</div>
 
-			{# User Stats #}
 			<div
 				class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-				{# My Loans #}
 				<div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
 					<div class="flex items-center justify-between">
 						<div>
@@ -40,7 +35,6 @@
 					</div>
 				</div>
 
-				{# My Reservations #}
 				<div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
 					<div class="flex items-center justify-between">
 						<div>
@@ -58,7 +52,6 @@
 					</div>
 				</div>
 
-				{# Catalogue #}
 				<div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
 					<div class="flex items-center justify-between">
 						<div>
@@ -79,10 +72,8 @@
 				</div>
 			</div>
 
-			{# Content Grid #}
 			<div
 				class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-				{# My Activity #}
 				<div class="bg-white rounded-lg shadow">
 					<div class="px-6 py-4 border-b border-color-200">
 						<h2 class="text-lg font-bold text-color-900">Mon activité</h2>
@@ -101,7 +92,6 @@
 					</div>
 				</div>
 
-				{# My Profile #}
 				<div class="bg-white rounded-lg shadow">
 					<div class="px-6 py-4 border-b border-color-200">
 						<h2 class="text-lg font-bold text-color-900">Mon profil</h2>

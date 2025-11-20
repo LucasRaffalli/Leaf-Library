@@ -8,7 +8,6 @@
 {% block admin_content %}
 	<div
 		class="h-screen">
-		<!-- Header -->
 		<header class="bg-white shadow">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div class="flex justify-between items-center py-6">
@@ -25,10 +24,8 @@
 
 		<main
 			class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-			<!-- Book Card -->
 			<div
 				class="bg-white shadow rounded-lg overflow-hidden">
-				<!-- Header with Icon -->
 				<div class="bg-gradient-to-r from-color-600 to-color-700 px-6 py-8">
 					<div class="flex items-center justify-between">
 						<div class="flex items-center">
@@ -45,17 +42,16 @@
 						</div>
 						{% if book.isArchived %}
 							<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/20 text-white">
-								📦 Archivé
+								Archivé
 							</span>
 						{% else %}
 							<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-500/20 text-white">
-								✅ Disponible
+								Disponible
 							</span>
 						{% endif %}
 					</div>
 				</div>
 
-				<!-- Details -->
 				<div class="px-6 py-6">
 					<dl class="grid grid-cols-1 md:grid-cols-2 gap-6">
 						<div>
@@ -79,11 +75,11 @@
 							<dd class="mt-1">
 								{% if book.isArchived %}
 									<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
-										📦 Archivé
+										Archivé
 									</span>
 								{% else %}
 									<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-										✅ Disponible
+										Disponible
 									</span>
 								{% endif %}
 							</dd>
@@ -99,11 +95,10 @@
 					</dl>
 				</div>
 
-				<!-- Actions -->
 				<div class="bg-color-50 px-6 py-4 flex justify-between items-center">
 					<div class="flex gap-3">
 						<a href="{{ path('app_book_edit', {'id': book.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-color-600 hover:bg-color-700 transition-colors">
-							✏️ Modifier
+							Modifier
 						</a>
 						<a href="{{ path('app_book_index') }}" class="inline-flex items-center px-4 py-2 border border-color-300 rounded-md text-sm font-medium text-color-700 bg-white hover:bg-color-50 transition-colors">
 							← Retour à la liste

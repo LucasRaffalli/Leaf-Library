@@ -3,18 +3,15 @@
 {% block body %}
 	<div
 		class="bg-color-50">
-		{# Admin Navbar #}
 		<nav class="bg-white shadow-lg sticky top-0 z-50">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div
 					class="flex justify-between items-center h-16">
-					{# Logo and Title #}
 					<div class="flex items-center gap-4">
 						{% include 'components/logo.html.twig' with { size: '40' } %}
 						<span class="text-xl font-bold text-color-900">Admin Panel</span>
 					</div>
 
-					{# Navigation Links #}
 					<div class="flex items-center gap-2">
 						<a href="{{ path('app_dashboard') }}" class="px-4 py-2 rounded-lg font-medium transition-colors text-color-700 hover:bg-color-100 border border-color-300">
 							Dashboard Utilisateur
@@ -30,7 +27,6 @@
 							Catégories
 						</a>
 
-						{# User Menu #}
 						<div class="flex items-center gap-3">
 							<a href="{{ path('app_logout') }}" class="px-3 py-2 text-sm text-color-600 hover:text-color-900 hover:bg-color-100 rounded-lg transition-colors">
 								Déconnexion
@@ -41,7 +37,6 @@
 			</div>
 		</nav>
 
-		{# Main Content Area #}
 		<main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
 			{% block admin_content %}{% endblock %}
 		</main>

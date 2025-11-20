@@ -8,7 +8,6 @@
 {% block admin_content %}
 	<div
 		class="h-screen">
-		<!-- Header -->
 		<header class="bg-white shadow">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div class="flex justify-between items-center py-6">
@@ -25,10 +24,8 @@
 
 		<main
 			class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-			<!-- Category Card -->
 			<div
 				class="bg-white shadow rounded-lg overflow-hidden">
-				<!-- Header with Icon -->
 				<div class="bg-gradient-to-r from-color-600 to-color-700 px-6 py-8">
 					<div class="flex items-center">
 						<div class="flex-shrink-0">
@@ -43,7 +40,6 @@
 					</div>
 				</div>
 
-				<!-- Details -->
 				<div class="px-6 py-6">
 					<dl class="grid grid-cols-1 gap-6">
 						<div>
@@ -57,11 +53,10 @@
 					</dl>
 				</div>
 
-				<!-- Actions -->
 				<div class="bg-color-50 px-6 py-4 flex justify-between items-center">
 					<div class="flex gap-3">
 						<a href="{{ path('app_category_edit', {'id': category.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-color-600 hover:bg-color-700 transition-colors">
-							✏️ Modifier
+							Modifier
 						</a>
 						<a href="{{ path('app_category_index') }}" class="inline-flex items-center px-4 py-2 border border-color-300 rounded-md text-sm font-medium text-color-700 bg-white hover:bg-color-50 transition-colors">
 							← Retour à la liste
