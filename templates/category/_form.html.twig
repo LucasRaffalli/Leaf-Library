@@ -1,0 +1,79 @@
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+<div class="flex flex-col gap-2">
+	{{ form_label(form.name, 'Nom de la catégorie', {
+			'label_attr': {'class': 'text-color-700 font-medium'}
+		}) }}
+	{{ form_widget(form.name, {
+			'attr': {'class': 'px-4 py-3 border border-color-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-color-500 focus:border-transparent', 'placeholder': 'Ex: Science-Fiction, Romance, Histoire...'}
+		}) }}
+	{{ form_errors(form.name) }}
+</div>
+
+<div class="flex flex-col gap-2">
+	{{ form_label(form.books, 'Livres associés', {
+			'label_attr': {'class': 'text-color-700 font-medium'}
+		}) }}
+
+	{# Two-column layout with pure CSS #}
+	<div
+		class="grid grid-cols-1 md:grid-cols-2 gap-4">
+		{# All books column #}
+		<div class="flex flex-col">
+			<div class="bg-gradient-to-r from-color-600 to-color-700 px-4 py-3 rounded-t-lg">
+				<h3 class="font-semibold text-white flex items-center gap-2">
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+					</svg>
+					Sélectionner les livres
+				</h3>
+				<p class="text-xs text-white/80 mt-1">Cochez les livres à associer</p>
+			</div>
+			<div class="border border-color-300 rounded-b-lg p-4 bg-white max-h-96 overflow-y-auto">
+				<div class="space-y-2">
+					{{ form_widget(form.books, {
+							'expanded': true
+						}) }}
+				</div>
+			</div>
+		</div>
+
+		{# Summary column #}
+		<div class="flex flex-col">
+			<div class="bg-color-100 px-4 py-3 rounded-t-lg border border-color-300 border-b-0">
+				<h3 class="font-semibold text-color-900 flex items-center gap-2">
+					<svg class="w-5 h-5 text-color-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+					</svg>
+					Résumé
+				</h3>
+				<p class="text-xs text-color-600 mt-1">Aperçu de votre sélection</p>
+			</div>
+			<div class="border border-color-300 rounded-b-lg p-4 bg-color-50 max-h-96 overflow-y-auto">
+				<div class="space-y-3">
+					<div class="flex items-center gap-2 text-sm text-color-700">
+						<svg class="w-4 h-4 text-color-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
+						<span>Cochez les cases à gauche pour associer des livres à cette catégorie.</span>
+					</div>
+					<div class="mt-4 p-3 bg-white rounded-lg border border-color-200">
+						<p class="text-xs text-color-500 uppercase tracking-wide font-semibold mb-2">💡 Astuce</p>
+						<p class="text-sm text-color-700">Les livres cochés seront automatiquement associés à cette catégorie lors de l'enregistrement.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{{ form_errors(form.books) }}
+</div>
+
+<div class="flex gap-3">
+	<button type="submit" class="px-6 py-3 bg-color-600 text-white font-semibold rounded-lg hover:bg-color-700 transition-colors">
+		{{ button_label|default('💾 Enregistrer') }}
+	</button>
+	<a href="{{ path('app_category_index') }}" class="inline-flex items-center px-6 py-3 border border-color-300 rounded-lg text-color-700 font-semibold hover:bg-color-50 transition-colors">
+		Annuler
+	</a>
+</div>
+{{ form_end(form) }}

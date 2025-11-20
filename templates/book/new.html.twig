@@ -1,0 +1,44 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Nouveau livre - Leaf Library
+{% endblock %}
+
+{% block admin_content %}
+	<div
+		class="h-screen">
+		<!-- Header -->
+		<header class="bg-white shadow">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex justify-between items-center py-6">
+					<div class="flex items-center">
+						{% include 'components/logo.html.twig' with { size: '48' } %}
+						<h1 class="ml-3 text-2xl font-bold text-color-900">Nouveau livre</h1>
+					</div>
+					<div class="flex items-center space-x-4">
+						<a href="{{ path('app_book_index') }}" class="text-color-600 hover:text-color-800 font-medium">← Retour à la liste</a>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<main
+			class="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+			<!-- Form Card -->
+			<div class="bg-white shadow rounded-lg overflow-hidden">
+				<div class="px-6 py-6">
+					<div class="flex items-center mb-6">
+						<svg class="h-8 w-8 text-color-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+						</svg>
+						<div class="ml-4">
+							<h2 class="text-xl font-semibold text-color-900">Ajouter un nouveau livre</h2>
+							<p class="text-sm text-color-600 mt-1">Remplissez les informations du livre</p>
+						</div>
+					</div>
+
+					{{ include('book/_form.html.twig') }}
+				</div>
+			</div>
+		</main>
+	</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+<div class="lg:col-span-1">
+	<div class="bg-gray-200 h-64 lg:h-80 rounded-lg flex items-center justify-center">
+		<svg class="h-20 w-20 text-gray-400" fill="currentColor" viewbox="0 0 20 20">
+			<path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+		</svg>
+	</div>
+</div>
+
+<!-- Informations du livre -->
+<div class="lg:col-span-2">
+	<h1 class="text-3xl font-bold text-color-900 mb-4">{{ book.title }}</h1>
+	<p class="text-xl text-color-600 mb-6">par
+		{{ book.author }}</p>
+
+	<!-- Informations détaillées -->
+	<div
+		class="space-y-4">
+		<!-- Statut -->
+		<div>
+			<label class="block text-sm font-medium text-color-700 mb-1">Statut</label>
+			<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+					                                {% if book.status.name == 'Disponible' %}
+					                                    bg-green-100 text-green-800
+					                                {% else %}
+					                                    bg-red-100 text-red-800
+					                                {% endif %}
+					                            ">
+				{{ book.status.name }}
+			</span>
+		</div>
+
+		<!-- Condition -->
+		<div>
+			<label class="block text-sm font-medium text-color-700 mb-1">État</label>
+			<p class="text-color-900">{{ book.condition.name }}</p>
+		</div>
+
+		<!-- Catégories -->
+		<div>
+			<label class="block text-sm font-medium text-color-700 mb-1">Catégories</label>
+			<div class="flex flex-wrap gap-2">
+				{% for category in book.categories %}
+					<span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-color-100 text-color-700">
+						{{ category.name }}
+					</span>
+				{% endfor %}
+			</div>
+		</div>
+
+		<!-- Montant de caution -->
+		<div>
+			<label class="block text-sm font-medium text-color-700 mb-1">Caution</label>
+			<p class="text-lg font-semibold text-color-900">{{ book.depositAmount }}€</p>
+		</div>
+
+		<!-- Dates -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div>
+				<label class="block text-sm font-medium text-color-700 mb-1">Ajouté le</label>
+				<p class="text-color-900">{{ book.createdAt|date('d/m/Y') }}</p>
+			</div>
+			<div>
+				<label class="block text-sm font-medium text-color-700 mb-1">Dernière mise à jour</label>
+				<p class="text-color-900">{{ book.updatedAt|date('d/m/Y') }}</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- Actions -->
+	<div class="mt-8 flex space-x-4">
+		{% if book.status.name == 'Disponible' and app.user %}
+			<button class="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors" onclick="alert('Fonctionnalité d\'emprunt à venir!')">
+				Emprunter ce livre
+			</button>
+		{% elseif not app.user %}
+			<a href="{{ path('app_login') }}" class="bg-color-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-color-600 transition-colors">
+				Connectez-vous pour emprunter
+			</a>
+		{% else %}
+			<div class="bg-gray-100 text-gray-500 px-6 py-3 rounded-lg font-medium">
+				Livre non disponible
+			</div>
+		{% endif %}
+
+		<a href="{{ path('app_catalogue') }}" class="border border-color-300 text-color-700 px-6 py-3 rounded-lg font-medium hover:bg-color-50 transition-colors">
+			Retour au catalogue
+		</a>
+	</div>
+</div></div></div></div></div>{% endblock %}

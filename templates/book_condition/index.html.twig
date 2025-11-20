@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BookCondition index{% endblock %}
+
+{% block body %}
+    <h1>BookCondition index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for book_condition in book_conditions %}
+            <tr>
+                <td>{{ book_condition.id }}</td>
+                <td>{{ book_condition.name }}</td>
+                <td>
+                    <a href="{{ path('app_book_condition_show', {'id': book_condition.id}) }}">show</a>
+                    <a href="{{ path('app_book_condition_edit', {'id': book_condition.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_book_condition_new') }}">Create new</a>
+{% endblock %}

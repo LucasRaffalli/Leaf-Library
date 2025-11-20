@@ -1,0 +1,44 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Nouvelle catégorie - Leaf Library
+{% endblock %}
+
+{% block admin_content %}
+	<div
+		class="h-screen">
+		<!-- Header -->
+		<header class="bg-white shadow">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex justify-between items-center py-6">
+					<div class="flex items-center">
+						{% include 'components/logo.html.twig' with { size: '48' } %}
+						<h1 class="ml-3 text-2xl font-bold text-color-900">Nouvelle catégorie</h1>
+					</div>
+					<div class="flex items-center space-x-4">
+						<a href="{{ path('app_category_index') }}" class="text-color-600 hover:text-color-800 font-medium">← Retour à la liste</a>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<main
+			class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+			<!-- Form Card -->
+			<div class="bg-white shadow rounded-lg overflow-hidden">
+				<div class="px-6 py-6">
+					<div class="flex items-center mb-6">
+						<svg class="h-8 w-8 text-color-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+						</svg>
+						<div class="ml-4">
+							<h2 class="text-xl font-semibold text-color-900">Créer une nouvelle catégorie</h2>
+							<p class="text-sm text-color-600 mt-1">Ajoutez une catégorie pour organiser vos livres</p>
+						</div>
+					</div>
+
+					{{ include('category/_form.html.twig') }}
+				</div>
+			</div>
+		</main>
+	</div>
+{% endblock %}

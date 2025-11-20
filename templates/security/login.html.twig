@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - Leaf Library
+{% endblock %}
+
+{% block body %}
+	<div class="h-screen flex flex-col items-center justify-center h-full gap-6">
+		{% include 'components/logo.html.twig' with { 'size': '96' } %}
+
+		<div class="flex flex-col items-center gap-2">
+			<h1 class="text-3xl md:text-5xl uppercase text-color-900 font-black">Connexion</h1>
+			<p class="text-md text-color-600 font-medium">Accédez à votre compte Leaf Library</p>
+		</div>
+
+		<form method="post" class="w-full max-w-md flex flex-col gap-4">
+			{% if error %}
+				<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+					{{ error.messageKey|trans(error.messageData, 'security') }}
+				</div>
+			{% endif %}
+
+			{% if app.user %}
+				<div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
+					Vous êtes connecté en tant que
+					{{ app.user.userIdentifier }},
+					<a href="{{ path('app_logout') }}" class="underline font-semibold">Se déconnecter</a>
+				</div>
+			{% endif %}
+
+			<div class="flex flex-col gap-2">
+				<label for="inputEmail" class="text-color-700 font-medium">Email</label>
+				<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="px-4 py-3 border border-color-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-color-500 focus:border-transparent" autocomplete="email" required autofocus>
+			</div>
+
+			<div class="flex flex-col gap-2">
+				<label for="inputPassword" class="text-color-700 font-medium">Mot de passe</label>
+				<input type="password" name="password" id="inputPassword" class="px-4 py-3 border border-color-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-color-500 focus:border-transparent" autocomplete="current-password" required>
+			</div>
+
+			<input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+			<div class="flex items-center gap-2">
+				<input type="checkbox" name="_remember_me" id="rememberMe" class="w-4 h-4 text-color-600 border-color-300 rounded focus:ring-color-500">
+				<label for="rememberMe" class="text-color-700">Se souvenir de moi</label>
+			</div>
+
+			{% include 'components/button.html.twig' with { text: 'Se connecter', type:'submit' } %}
+
+
+			<button class="px-6 py-3 bg-color-600 text-white font-semibold rounded-lg hover:bg-color-700 transition-colors mt-2" type="submit">
+				Se connecter
+			</button>
+		</form>
+
+		<p class="text-color-500 text-sm">
+			Pas encore de compte ?
+			<a href="{{ path('app_register') }}" class="text-color-600 font-semibold hover:underline">Créer un compte</a>
+		</p>
+	</div>
+{% endblock %}

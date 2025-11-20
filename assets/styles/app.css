@@ -1,2 +1,90 @@
 @import "tailwindcss";
 @source not "../../public";
+
+body {
+    font-family: 'Satoshi', sans-serif;
+}
+
+@theme {
+    --color-color-50: #FFFFFF;
+    --color-color-100: #FCFCFC;
+    --color-color-200: #DEDEDE;
+    --color-color-300: #BFBFBF;
+    --color-color-400: #A0A0A0;
+    --color-color-500: #828282;
+    --color-color-600: #636363;
+    --color-color-700: #454545;
+    --color-color-800: #262626;
+    --color-color-900: #171717;
+    --color-color-950: #0F0F0F;
+}
+
+/* Hide checkboxes visually but keep them functional */
+input[type="checkbox"],
+input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Enhanced checkbox list item styling */
+input[type="checkbox"]+label,
+input[type="radio"]+label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    margin: 0;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    border: 1px solid var(--color-color-200);
+    background-color: white;
+    color: var(--color-color-700);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+input[type="checkbox"]:hover+label,
+input[type="radio"]:hover+label {
+    background-color: var(--color-color-50);
+    border-color: var(--color-color-400);
+    transform: translateX(2px);
+}
+
+/* Checked state styling with GREEN color */
+input[type="checkbox"]:checked+label,
+input[type="radio"]:checked+label {
+    background-color: rgba(34, 197, 94, 0.08);
+    border-color: rgb(34, 197, 94);
+    font-weight: 600;
+    color: rgb(22, 163, 74);
+}
+
+/* Green checkmark for selected items */
+input[type="checkbox"]:checked+label::before {
+    content: '✓';
+    position: absolute;
+    right: 1rem;
+    color: rgb(34, 197, 94);
+    font-weight: bold;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+/* Remove default list styling */
+.form-check {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}

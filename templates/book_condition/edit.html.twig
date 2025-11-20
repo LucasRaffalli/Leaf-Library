@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit BookCondition{% endblock %}
+
+{% block body %}
+    <h1>Edit BookCondition</h1>
+
+    {{ include('book_condition/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_book_condition_index') }}">back to list</a>
+
+    {{ include('book_condition/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}
+	{{ book.title }}
+	- Leaf Library
+{% endblock %}
+
+{% block admin_content %}
+	<div
+		class="h-screen">
+		<!-- Header -->
+		<header class="bg-white shadow">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex justify-between items-center py-6">
+					<div class="flex items-center">
+						{% include 'components/logo.html.twig' with { size: '48' } %}
+						<h1 class="ml-3 text-2xl font-bold text-color-900">Détails du livre</h1>
+					</div>
+					<div class="flex items-center space-x-4">
+						<a href="{{ path('app_book_index') }}" class="text-color-600 hover:text-color-800 font-medium">← Retour à la liste</a>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<main
+			class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+			<!-- Book Card -->
+			<div
+				class="bg-white shadow rounded-lg overflow-hidden">
+				<!-- Header with Icon -->
+				<div class="bg-gradient-to-r from-color-600 to-color-700 px-6 py-8">
+					<div class="flex items-center justify-between">
+						<div class="flex items-center">
+							<div class="flex-shrink-0">
+								<svg class="h-16 w-16 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+								</svg>
+							</div>
+							<div class="ml-6">
+								<h2 class="text-3xl font-bold text-white">{{ book.title }}</h2>
+								<p class="text-white/80 text-lg mt-1">{{ book.author }}</p>
+								<p class="text-white/60 text-sm mt-1">ID: #{{ book.id }}</p>
+							</div>
+						</div>
+						{% if book.isArchived %}
+							<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/20 text-white">
+								📦 Archivé
+							</span>
+						{% else %}
+							<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-500/20 text-white">
+								✅ Disponible
+							</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<!-- Details -->
+				<div class="px-6 py-6">
+					<dl class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div>
+							<dt class="text-sm font-medium text-color-500 uppercase tracking-wide">Identifiant</dt>
+							<dd class="mt-1 text-lg text-color-900 font-semibold">#{{ book.id }}</dd>
+						</div>
+						<div>
+							<dt class="text-sm font-medium text-color-500 uppercase tracking-wide">Titre</dt>
+							<dd class="mt-1 text-lg text-color-900 font-semibold">{{ book.title }}</dd>
+						</div>
+						<div>
+							<dt class="text-sm font-medium text-color-500 uppercase tracking-wide">Auteur</dt>
+							<dd class="mt-1 text-lg text-color-900 font-semibold">{{ book.author }}</dd>
+						</div>
+						<div>
+							<dt class="text-sm font-medium text-color-500 uppercase tracking-wide">Montant de la caution</dt>
+							<dd class="mt-1 text-lg text-color-900 font-semibold">{{ book.depositAmount }}€</dd>
+						</div>
+						<div>
+							<dt class="text-sm font-medium text-color-500 uppercase tracking-wide">Statut</dt>
+							<dd class="mt-1">
+								{% if book.isArchived %}
+									<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+										📦 Archivé
+									</span>
+								{% else %}
+									<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+										✅ Disponible
+									</span>
+								{% endif %}
+							</dd>
+						</div>
+						<div>
+							<dt class="text-sm font-medium text-color-500 uppercase tracking-wide">Date de création</dt>
+							<dd class="mt-1 text-lg text-color-900 font-semibold">{{ book.createdAt ? book.createdAt|date('d/m/Y à H:i') : '-' }}</dd>
+						</div>
+						<div class="md:col-span-2">
+							<dt class="text-sm font-medium text-color-500 uppercase tracking-wide">Dernière mise à jour</dt>
+							<dd class="mt-1 text-lg text-color-900 font-semibold">{{ book.updatedAt ? book.updatedAt|date('d/m/Y à H:i') : '-' }}</dd>
+						</div>
+					</dl>
+				</div>
+
+				<!-- Actions -->
+				<div class="bg-color-50 px-6 py-4 flex justify-between items-center">
+					<div class="flex gap-3">
+						<a href="{{ path('app_book_edit', {'id': book.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-color-600 hover:bg-color-700 transition-colors">
+							✏️ Modifier
+						</a>
+						<a href="{{ path('app_book_index') }}" class="inline-flex items-center px-4 py-2 border border-color-300 rounded-md text-sm font-medium text-color-700 bg-white hover:bg-color-50 transition-colors">
+							← Retour à la liste
+						</a>
+					</div>
+					<div>
+						{{ include('book/_delete_form.html.twig') }}
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New BookCondition{% endblock %}
+
+{% block body %}
+    <h1>Create new BookCondition</h1>
+
+    {{ include('book_condition/_form.html.twig') }}
+
+    <a href="{{ path('app_book_condition_index') }}">back to list</a>
+{% endblock %}

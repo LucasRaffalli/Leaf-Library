@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit BookStatus{% endblock %}
+
+{% block body %}
+    <h1>Edit BookStatus</h1>
+
+    {{ include('book_status/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_book_status_index') }}">back to list</a>
+
+    {{ include('book_status/_delete_form.html.twig') }}
+{% endblock %}

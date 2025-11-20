@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New BookStatus{% endblock %}
+
+{% block body %}
+    <h1>Create new BookStatus</h1>
+
+    {{ include('book_status/_form.html.twig') }}
+
+    <a href="{{ path('app_book_status_index') }}">back to list</a>
+{% endblock %}

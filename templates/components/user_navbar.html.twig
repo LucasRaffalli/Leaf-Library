@@ -1,0 +1,43 @@
+{# User Navbar Component #}
+<nav class="bg-white shadow-lg sticky top-0 z-50">
+	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<div
+			class="flex justify-between items-center h-16">
+			{# Logo and Title #}
+			<div class="flex items-center gap-4">
+				{% include 'components/logo.html.twig' with { size: '40' } %}
+				<span class="text-xl font-bold text-color-900">Leaf Library</span>
+			</div>
+
+			{# Navigation Links #}
+			<div class="flex items-center gap-2">
+				{% if app.user %}
+					<a href="{{ path('app_dashboard') }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if app.request.get('_route') == 'app_dashboard' %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %}">
+						Dashboard
+					</a>
+				{% endif %}
+
+				<a href="{{ path('app_catalogue') }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if app.request.get('_route') starts with 'app_catalogue' %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %}">
+					Catalogue
+				</a>
+
+				{% if is_granted('ROLE_ADMIN') %}
+					{# <div class="w-px h-6 bg-color-300"></div> #}
+					<a href="{{ path('app_admin_dashboard') }}" class="px-4 py-2 rounded-lg font-medium transition-colors text-color-700 hover:bg-color-100 border border-color-300">
+						Administration
+					</a>
+				{% endif %}
+
+				{# User Menu #}
+				<div class="flex items-center gap-3 ml-2">
+					{% if app.user %}
+						{% include 'components/button.html.twig' with { variant: 'outline', text: 'Déconnexion', url: path('app_logout') } %}
+					{% else %}
+						{% include 'components/button.html.twig' with { variant: 'null', text: 'Connexion', url: path('app_login') } %}
+						{% include 'components/button.html.twig' with { variant: 'outline', text: 'Inscription', url: path('app_register') } %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>

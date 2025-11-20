@@ -1,0 +1,142 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue - Leaf Library
+{% endblock %}
+
+{% block body %}
+	<div
+		class="min-h-screen bg-color-50">
+		{# User Navbar #}
+		{% include 'components/user_navbar.html.twig' %}
+
+		{# Main Content #}
+		<main
+			class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+			{# Page Header #}
+			<div class="mb-8">
+				<h1 class="text-3xl font-black text-color-900 uppercase tracking-tight">📚 Catalogue</h1>
+				<p class="mt-2 text-color-600">Parcourez notre collection de livres</p>
+			</div>
+
+			{# Filters #}
+			<div class="bg-white p-6 rounded-lg shadow mb-6">
+				<form
+					method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+					{# Search #}
+					<div>
+						<label for="search" class="block text-sm font-medium text-color-700 mb-1">Recherche</label>
+						<input type="text" id="search" name="search" value="{{ current_search }}" placeholder="Titre ou auteur..." class="w-full px-3 py-2 border border-color-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color-500">
+					</div>
+
+					{# Category #}
+					<div>
+						<label for="category" class="block text-sm font-medium text-color-700 mb-1">Catégorie</label>
+						<select id="category" name="category" class="w-full px-3 py-2 border border-color-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color-500">
+							<option value="">Toutes les catégories</option>
+							{% for category in categories %}
+								<option value="{{ category.id }}" {% if current_category == category.id %} selected {% endif %}>
+									{{ category.name }}
+								</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					{# Status #}
+					<div>
+						<label for="status" class="block text-sm font-medium text-color-700 mb-1">Statut</label>
+						<select id="status" name="status" class="w-full px-3 py-2 border border-color-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color-500">
+							<option value="">Tous les statuts</option>
+							{% for status in statuses %}
+								<option value="{{ status.id }}" {% if current_status == status.id %} selected {% endif %}>
+									{{ status.name }}
+								</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					{# Buttons #}
+					<div class="flex items-end gap-2">
+						<button type="submit" class="flex-1 bg-color-600 text-white px-4 py-2 rounded-md hover:bg-color-700 transition-colors font-medium">
+							Filtrer
+						</button>
+						<a href="{{ path('app_catalogue') }}" class="flex-1 text-center bg-color-200 text-color-700 px-4 py-2 rounded-md hover:bg-color-300 transition-colors font-medium">
+							Reset
+						</a>
+					</div>
+				</form>
+			</div>
+
+			{# Results #}
+			<div class="bg-white rounded-lg shadow">
+				<div class="px-6 py-4 border-b border-color-200">
+					<h2 class="text-lg font-bold text-color-900">
+						{{ books|length }}
+						livre(s) trouvé(s)
+					</h2>
+				</div>
+
+				{% if books|length > 0 %}
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+						{% for book in books %}
+							<div class="border border-color-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+								<h3 class="font-bold text-lg text-color-900 mb-2">{{ book.title }}</h3>
+								<p class="text-color-600 mb-2">
+									<strong>Auteur :</strong>
+									{{ book.author }}
+								</p>
+
+								{# Status Badge #}
+								<div class="mb-2">
+									<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if book.status.name == 'Disponible' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+										{{ book.status.name }}
+									</span>
+								</div>
+
+								{# Condition #}
+								<p class="text-sm text-color-600 mb-2">
+									<strong>État :</strong>
+									{{ book.condition.name }}
+								</p>
+
+								{# Categories #}
+								<div class="mb-4">
+									<p class="text-sm text-color-600 mb-1">
+										<strong>Catégories :</strong>
+									</p>
+									<div class="flex flex-wrap gap-1">
+										{% for category in book.categories %}
+											<span class="inline-flex items-center px-2 py-1 rounded text-xs bg-color-100 text-color-700">
+												{{ category.name }}
+											</span>
+										{% endfor %}
+									</div>
+								</div>
+
+								{# Actions #}
+								<div class="flex space-x-2">
+									<a href="{{ path('app_catalogue_show', {id: book.id}) }}" class="flex-1 text-center bg-color-600 text-white px-3 py-2 rounded text-sm hover:bg-color-700 transition-colors font-medium">
+										Voir détail
+									</a>
+
+									{% if book.status.name == 'Disponible' and app.user %}
+										<button class="flex-1 bg-green-500 text-white px-3 py-2 rounded text-sm hover:bg-green-600 transition-colors font-medium" onclick="alert('Fonctionnalité d\'emprunt à venir!')">
+											Emprunter
+										</button>
+									{% endif %}
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				{% else %}
+					<div class="p-12 text-center">
+						<svg class="w-16 h-16 text-color-300 mx-auto mb-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+						</svg>
+						<h3 class="text-lg font-medium text-color-900 mb-2">Aucun livre trouvé</h3>
+						<p class="text-color-500">Essayez de modifier vos critères de recherche</p>
+					</div>
+				{% endif %}
+			</div>
+		</main>
+	</div>
+{% endblock %}

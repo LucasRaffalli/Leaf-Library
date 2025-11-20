@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - Leaf Library
+{% endblock %}
+
+{% block body %}
+	<div class="h-screen flex flex-col items-center justify-center h-full gap-6 py-8">
+		{% include 'components/logo.html.twig' with { 'size': '96' } %}
+
+		<div class="flex flex-col items-center gap-2">
+			<h1 class="text-3xl md:text-5xl uppercase text-color-900 font-black">Inscription</h1>
+			<p class="text-md text-color-600 font-medium">Créez votre compte Leaf Library</p>
+		</div>
+
+		<div class="w-full max-w-md">
+			{{ form_start(registrationForm, {'attr': {'class': 'flex flex-col gap-4'}}) }}
+
+			{% if form_errors(registrationForm) %}
+				<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+					{{ form_errors(registrationForm) }}
+				</div>
+			{% endif %}
+
+			<div class="flex flex-col gap-2">
+				{{ form_label(registrationForm.name, 'Nom', {
+            'label_attr': {'class': 'text-color-700 font-medium'}
+          }) }}
+				{{ form_widget(registrationForm.name, {
+            'attr': {'class': 'px-4 py-3 border border-color-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-color-500 focus:border-transparent'}
+          }) }}
+				{{ form_errors(registrationForm.name) }}
+			</div>
+
+			<div class="flex flex-col gap-2">
+				{{ form_label(registrationForm.email, 'Email', {
+            'label_attr': {'class': 'text-color-700 font-medium'}
+          }) }}
+				{{ form_widget(registrationForm.email, {
+            'attr': {'class': 'px-4 py-3 border border-color-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-color-500 focus:border-transparent'}
+          }) }}
+				{{ form_errors(registrationForm.email) }}
+			</div>
+
+			<div class="flex flex-col gap-2">
+				{{ form_label(registrationForm.plainPassword, 'Mot de passe', {
+            'label_attr': {'class': 'text-color-700 font-medium'}
+          }) }}
+				{{ form_widget(registrationForm.plainPassword, {
+            'attr': {'class': 'px-4 py-3 border border-color-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-color-500 focus:border-transparent'}
+          }) }}
+				{{ form_errors(registrationForm.plainPassword) }}
+			</div>
+
+			<div class="flex items-start gap-2">
+				{{ form_widget(registrationForm.agreeTerms, {
+            'attr': {'class': 'w-4 h-4 text-color-600 border-color-300 rounded focus:ring-color-500 mt-1'}
+          }) }}
+				{{ form_label(registrationForm.agreeTerms, "J'accepte les conditions d'utilisation", {
+            'label_attr': {'class': 'text-color-700 text-sm'}
+          }) }}
+			</div>
+			{{ form_errors(registrationForm.agreeTerms) }}
+
+			<button type="submit" class="px-6 py-3 bg-color-600 text-white font-semibold rounded-lg hover:bg-color-700 transition-colors mt-2">
+				S'inscrire
+			</button>
+
+			{{ form_end(registrationForm) }}
+		</div>
+
+		<p class="text-color-500 text-sm">
+			Vous avez déjà un compte ?
+			<a href="{{ path('app_login') }}" class="text-color-600 font-semibold hover:underline">Se connecter</a>
+		</p>
+	</div>
+{% endblock %}
