@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit BookStatus{% endblock %}
+{% block title %}Modifier le statut{% endblock %}
 
 {% block body %}
-    <h1>Edit BookStatus</h1>
+    <h1>Modifier le statut</h1>
 
-    {{ include('book_status/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('book_status/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
-    <a href="{{ path('app_book_status_index') }}">back to list</a>
+    <a href="{{ path('app_book_status_index') }}">← Retour</a>
 
     {{ include('book_status/_delete_form.html.twig') }}
 {% endblock %}

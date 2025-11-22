@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}BookStatus index{% endblock %}
+{% block title %}Gestion des statuts{% endblock %}
 
 {% block body %}
-    <h1>BookStatus index</h1>
+    <h1>Gestion des statuts</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
+                <th>Nom</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -19,17 +19,17 @@
                 <td>{{ book_status.id }}</td>
                 <td>{{ book_status.name }}</td>
                 <td>
-                    <a href="{{ path('app_book_status_show', {'id': book_status.id}) }}">show</a>
-                    <a href="{{ path('app_book_status_edit', {'id': book_status.id}) }}">edit</a>
+                    <a href="{{ path('app_book_status_show', {'id': book_status.id}) }}">Voir</a>
+                    <a href="{{ path('app_book_status_edit', {'id': book_status.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="3">Aucun statut trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_book_status_new') }}">Create new</a>
+    <a href="{{ path('app_book_status_new') }}">Ajouter un statut</a>
 {% endblock %}

@@ -1,0 +1,13 @@
+framework:
+    rate_limiter:
+        # Rate limiting par IP pour le login (5 tentatives toutes les 15 minutes)
+        login_ip:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '15 minutes'
+            
+        # Rate limiting par email pour le login (3 tentatives toutes les 5 minutes)
+        login_email:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '5 minutes'

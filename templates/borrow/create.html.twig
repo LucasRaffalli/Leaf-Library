@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Emprunter {{ book.title }} - Leaf Library{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-50">
+    <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div class="flex items-center">
+                    {% include 'components/logo.html.twig' with { size: '48' } %}
+                    <h1 class="ml-3 text-2xl font-bold text-color-900">Emprunter un livre</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ path('app_catalogue') }}" class="text-color-600 hover:text-color-800">Retour au catalogue</a>
+                    <a href="{{ path('app_logout') }}" class="text-color-600 hover:text-color-800">Déconnexion</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-2xl font-bold text-color-900 mb-6">Confirmer l'emprunt</h2>
+
+            <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                <h3 class="font-bold text-lg text-color-900 mb-2">{{ book.title }}</h3>
+                <p class="text-gray-700">Par {{ book.author }}</p>
+                
+                {% if book.depositAmount > 0 %}
+                    <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                        <p class="text-sm text-yellow-800">
+                            <strong>Caution :</strong> {{ book.depositAmount }}€ (sera restituée au retour du livre en bon état)
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+
+            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+                <div>
+                    {{ form_label(form.returnDueDate, null, {'label_attr': {'class': 'block text-sm font-medium text-color-700 mb-1'}}) }}
+                    {{ form_widget(form.returnDueDate, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color-500 focus:border-color-500'}}) }}
+                    {{ form_errors(form.returnDueDate) }}
+                </div>
+
+                <div class="p-4 bg-blue-50 border border-blue-200 rounded">
+                    <h4 class="font-medium text-blue-900 mb-2">Conditions d'emprunt :</h4>
+                    <ul class="text-sm text-blue-800 space-y-1">
+                        <li>• Vous vous engagez à retourner le livre à la date prévue</li>
+                        <li>• Le livre doit être retourné en bon état</li>
+                        <li>• Des pénalités peuvent s'appliquer en cas de retard</li>
+                        <li>• Maximum 5 emprunts simultanés par utilisateur</li>
+                    </ul>
+                </div>
+
+                <div class="flex justify-end space-x-3">
+                    <a href="{{ path('app_catalogue') }}" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        Annuler
+                    </a>
+                    <button type="submit" class="px-6 py-2 bg-color-600 text-white rounded-md hover:bg-color-700">
+                        Confirmer l'emprunt
+                    </button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </main>
+</div>
+{% endblock %}

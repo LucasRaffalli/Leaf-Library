@@ -19,13 +19,11 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // Récupérer les rôles existants
         $roleRepository = $manager->getRepository(Role::class);
         $adminRole = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
         $userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
         $librarianRole = $roleRepository->findOneBy(['name' => 'ROLE_LIBRARIAN']);
 
-        // Admin user
         $admin = new User();
         $admin->setName('Administrateur');
         $admin->setEmail('admin@leaflibrary.com');
@@ -41,7 +39,6 @@ class UserFixtures extends Fixture
         
         $manager->persist($admin);
 
-        // Regular user
         $user = new User();
         $user->setName('Utilisateur Test');
         $user->setEmail('user@leaflibrary.com');
@@ -57,7 +54,6 @@ class UserFixtures extends Fixture
         
         $manager->persist($user);
 
-        // Librarian user
         $librarian = new User();
         $librarian->setName('Bibliothécaire');
         $librarian->setEmail('librarian@leaflibrary.com');

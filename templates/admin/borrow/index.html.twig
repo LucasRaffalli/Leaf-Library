@@ -1,0 +1,183 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Gestion des emprunts - Admin
+{% endblock %}
+
+{% block admin_content %}
+	<div class="mb-8">
+		<h1 class="text-3xl font-black text-color-900 uppercase tracking-tight">Gestion des emprunts</h1>
+		<p class="mt-2 text-color-600">Vérification des retours et suivi</p>
+	</div>
+
+	<!-- En attente de vérification -->
+	<div class="bg-white rounded-lg shadow mb-6">
+		<div class="px-6 py-4 border-b border-color-200">
+			<div class="flex items-center justify-between">
+				<h2 class="text-lg font-bold text-color-900">En attente de vérification</h2>
+				{% if pendingVerification|length > 0 %}
+					<span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm font-semibold rounded-full">
+						{{ pendingVerification|length }}
+						à traiter
+					</span>
+				{% endif %}
+			</div>
+		</div>
+		<div class="overflow-x-auto">
+			{% if pendingVerification|length > 0 %}
+				<table class="min-w-full divide-y divide-color-200">
+					<thead class="bg-color-50">
+						<tr>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Utilisateur</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Livre</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Emprunté le</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Retourné le</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Caution</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Actions</th>
+						</tr>
+					</thead>
+					<tbody class="bg-white divide-y divide-color-200">
+						{% for borrow in pendingVerification %}
+							<tr class="hover:bg-color-50">
+								<td class="px-6 py-4 whitespace-nowrap">
+									<div class="text-sm font-medium text-color-900">{{ borrow.user.name ?? borrow.user.email }}</div>
+									<div class="text-sm text-color-500">{{ borrow.user.email }}</div>
+								</td>
+								<td class="px-6 py-4">
+									<div class="text-sm font-medium text-color-900">{{ borrow.book.title }}</div>
+									<div class="text-sm text-color-500">{{ borrow.book.author }}</div>
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-color-500">
+									{{ borrow.borrowDate|date('d/m/Y') }}
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-color-500">
+									{{ borrow.returnDate|date('d/m/Y') }}
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm">
+									{% if borrow.hasDeposit %}
+										<span class="text-yellow-600 font-medium">{{ borrow.depositAmount }}€</span>
+									{% else %}
+										<span class="text-color-400">-</span>
+									{% endif %}
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm">
+									<a href="{{ path('app_admin_borrow_verify', {id: borrow.id}) }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 font-medium">
+										Vérifier
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+				<div class="p-12 text-center">
+					<div class="flex items-center justify-center gap-3 p-4 bg-green-50 rounded-lg inline-flex">
+						<svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+						</svg>
+						<p class="text-sm text-green-700 font-medium">Aucun retour en attente de vérification</p>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+	<!-- Tous les emprunts -->
+	<div class="bg-white rounded-lg shadow">
+		<div class="px-6 py-4 border-b border-color-200">
+			<h2 class="text-lg font-bold text-color-900">Historique des emprunts</h2>
+		</div>
+		<div class="overflow-x-auto">
+			{% if allBorrows|length > 0 %}
+				<table class="min-w-full divide-y divide-color-200">
+					<thead class="bg-color-50">
+						<tr>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Utilisateur</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Livre</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Dates</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Retour</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Statut</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Caution</th>
+							<th class="px-6 py-3 text-left text-xs font-medium text-color-500 uppercase tracking-wider">Actions</th>
+						</tr>
+					</thead>
+					<tbody class="bg-white divide-y divide-color-200">
+						{% for borrow in allBorrows %}
+							{% set isOverdue = borrow.returnDueDate < date() and borrow.status.name not in ['Rendu', 'En vérification'] %}
+							{% set returnedLate = borrow.returnDate and borrow.returnDate > borrow.returnDueDate %}
+							{% set returnedEarly = borrow.returnDate and borrow.returnDate <= borrow.returnDueDate %}
+							<tr class="hover:bg-color-50">
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-color-900">
+									{{ borrow.user.name ?? borrow.user.email }}
+								</td>
+								<td class="px-6 py-4 text-sm text-color-900">
+									{{ borrow.book.title }}
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-color-500">
+									<div>{{ borrow.borrowDate|date('d/m/Y') }}</div>
+									<div>{{ borrow.returnDueDate|date('d/m/Y') }}</div>
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm">
+									{% if borrow.returnDate %}
+										<div class="{% if returnedLate %}text-red-600{% else %}text-green-600{% endif %} font-medium">
+											{{ borrow.returnDate|date('d/m/Y') }}
+										</div>
+										{% if returnedLate %}
+											{% set daysLate = borrow.returnDate.diff(borrow.returnDueDate).days %}
+											<div class="text-xs text-red-500">+{{ daysLate }}
+												jour(s)</div>
+										{% elseif returnedEarly %}
+											<div class="text-xs text-green-500">✓ À temps</div>
+										{% endif %}
+									{% else %}
+										<span class="text-color-400">-</span>
+									{% endif %}
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap">
+									<span class="px-2 py-1 text-xs font-semibold rounded-full
+																					{% if borrow.status.name == 'Rendu' %}
+																						bg-gray-100 text-gray-800
+																					{% elseif borrow.status.name == 'En vérification' %}
+																						bg-yellow-100 text-yellow-800
+																					{% elseif isOverdue %}
+																						bg-red-100 text-red-800
+																					{% else %}
+																						bg-blue-100 text-blue-800
+																					{% endif %}">
+										{{ borrow.status.name }}
+									</span>
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm">
+									{% if borrow.hasDeposit %}
+										{% if borrow.isDepositReturned %}
+											<span class="text-green-600">✓ Rendue</span>
+										{% else %}
+											<span class="text-red-600">{{ borrow.depositAmount }}€</span>
+										{% endif %}
+									{% else %}
+										<span class="text-color-400">-</span>
+									{% endif %}
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm">
+									<div class="flex items-center gap-2">
+										{% if borrow.status.name == 'En vérification' %}
+											<a href="{{ path('app_admin_borrow_verify', {id: borrow.id}) }}" class="bg-yellow-500 text-white px-3 py-1.5 rounded hover:bg-yellow-600 font-medium text-xs">
+												Vérifier
+											</a>
+										{% endif %}
+										<a href="{{ path('app_borrow_show', {id: borrow.id}) }}" class="text-color-600 hover:text-color-900 font-medium">
+											Détails
+										</a>
+									</div>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+				<div class="p-12 text-center">
+					<p class="text-color-500">Aucun emprunt enregistré</p>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

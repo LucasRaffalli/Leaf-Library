@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -22,11 +23,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: 'L\'email ne peut pas être vide')]
+    #[Assert\Email(message: 'L\'email "{{ value }}" n\'est pas valide')]
     private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
     #[ORM\Column]
     private array $roles = [];
 
@@ -34,6 +34,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le nom ne peut pas être vide')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Le nom doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Le nom ne peut pas dépasser {{ limit }} caractères'
+    )]
     private ?string $name = null;
 
     #[ORM\Column]
@@ -49,9 +56,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinTable(name: 'user_roles')]
     private Collection $userRoles;
 
+    #[ORM\OneToMany(targetEntity: Borrow::class, mappedBy: 'user')]
+    private Collection $borrows;
+
     public function __construct()
     {
         $this->userRoles = new ArrayCollection();
+        $this->borrows = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -80,13 +91,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         
-        foreach ($this->userRoles as $role) {
-            $roleName = $role->getName();
-            // Ajouter le préfixe ROLE_ seulement s'il n'existe pas déjà
-            if (!str_starts_with($roleName, 'ROLE_')) {
-                $roleName = 'ROLE_' . strtoupper($roleName);
+        if ($this->userRoles !== null) {
+            foreach ($this->userRoles as $role) {
+                $roleName = $role->getName();
+                if (!str_starts_with($roleName, 'ROLE_')) {
+                    $roleName = 'ROLE_' . strtoupper($roleName);
+                }
+                $roles[] = $roleName;
             }
-            $roles[] = $roleName;
         }
         
         $roles[] = 'ROLE_USER';
@@ -190,6 +202,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getBorrows(): Collection
+    {
+        return $this->borrows;
+    }
+
+    public function addBorrow(Borrow $borrow): static
+    {
+        if (!$this->borrows->contains($borrow)) {
+            $this->borrows->add($borrow);
+            $borrow->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBorrow(Borrow $borrow): static
+    {
+        if ($this->borrows->removeElement($borrow)) {
+            if ($borrow->getUser() === $this) {
+                $borrow->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {

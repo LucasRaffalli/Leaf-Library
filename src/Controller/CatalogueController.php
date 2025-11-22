@@ -8,6 +8,7 @@ use App\Entity\BookStatus;
 use App\Repository\BookRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\BookStatusRepository;
+use App\Service\BookAvailabilityService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,8 @@ class CatalogueController extends AbstractController
         Request $request, 
         BookRepository $bookRepository,
         CategoryRepository $categoryRepository,
-        BookStatusRepository $bookStatusRepository
+        BookStatusRepository $bookStatusRepository,
+        BookAvailabilityService $bookAvailabilityService
     ): Response {
         $search = $request->query->get('search', '');
         $categoryId = $request->query->get('category', '');
@@ -61,15 +63,17 @@ class CatalogueController extends AbstractController
             'current_search' => $search,
             'current_category' => $categoryId,
             'current_status' => $statusId,
+            'bookAvailabilityService' => $bookAvailabilityService,
         ]);
     }
 
     #[Route('/catalogue/{id}', name: 'app_catalogue_show', methods: ['GET'])]
     #[Route('/books/{id}', name: 'app_books_show', methods: ['GET'])]
-    public function show(Book $book): Response
+    public function show(Book $book, BookAvailabilityService $bookAvailabilityService): Response
     {
         return $this->render('catalogue/show.html.twig', [
             'book' => $book,
+            'bookAvailabilityService' => $bookAvailabilityService,
         ]);
     }
 }

@@ -3,26 +3,23 @@
 {% set url = url|default('#') %}
 {% set type = type|default('button') %}
 
+{% set classes = '' %}
+{% if variant == 'fill' %}
+  {% set classes = 'bg-color-600 text-white hover:bg-color-700' %}
+{% elseif variant == 'outline' %}
+  {% set classes = 'border border-color-600 text-color-600 bg-transparent hover:bg-color-600 hover:text-white' %}
+{% elseif variant == 'null' %}
+  {% set classes = 'bg-transparent text-color-600 hover:text-color-800' %}
+{% endif %}
+
 {% if type == 'submit' %}
   <button type="submit"
-    class="cursor-pointer px-4 py-2 rounded-md font-medium text-center inline-block transition-colors duration-300 {% if variant == 'fill' %}
-
-    {% elseif variant == 'outline' %}
-
-    {% elseif variant == 'null' %}
-
-    {% endif %}">
+    class="cursor-pointer px-4 py-2 rounded-md font-medium text-center inline-block transition-colors duration-300 {{ classes }}">
     {{ text }}
   </button>
 {% else %}
   <a href="{{ url }}"
-    class="cursor-pointer px-4 py-2 rounded-md font-medium text-center inline-block transition-colors duration-300 {% if variant == 'fill' %}
-
-    {% elseif variant == 'outline' %}
-
-    {% elseif variant == 'null' %}
-
-    {% endif %}">
+    class="cursor-pointer px-4 py-2 rounded-md font-medium text-center inline-block transition-colors duration-300 {{ classes }}">
     {{ text }}
   </a>
 {% endif %}

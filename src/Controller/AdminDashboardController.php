@@ -18,6 +18,8 @@ class AdminDashboardController extends AbstractController
             'stats' => $statsService->getStats(),
             'recentBooks' => $statsService->getRecentBooks(),
             'recentUsers' => $statsService->getRecentUsers(),
+            'recentBorrows' => $statsService->getRecentBorrows(),
+            'overdueBorrows' => $statsService->getOverdueBorrows(),
             'booksByCategory' => $statsService->getBooksByCategory(),
             'booksByCondition' => $statsService->getBooksByCondition(),
         ]);

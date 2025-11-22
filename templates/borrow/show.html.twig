@@ -1,0 +1,166 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails emprunt - Leaf Library
+{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen bg-color-50">
+		{% include 'components/navbar.html.twig' %}
+
+		<main class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+			<div class="bg-white rounded-lg shadow p-6">
+				<div
+					class="space-y-6">
+					<!-- Informations principales -->
+					<div
+						class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<!-- Informations du livre -->
+						<div>
+							<h2 class="text-lg font-bold text-color-900 mb-4">Livre emprunté</h2>
+							<div class="space-y-3">
+								<div>
+									<label class="block text-sm font-medium text-gray-500">Titre</label>
+									<p class="text-color-900 font-medium">{{ borrow.book.title }}</p>
+								</div>
+								<div>
+									<label class="block text-sm font-medium text-gray-500">Auteur</label>
+									<p class="text-color-900">{{ borrow.book.author }}</p>
+								</div>
+								<div>
+									<label class="block text-sm font-medium text-gray-500">État à l'emprunt</label>
+									<p class="text-color-900">{{ borrow.book.condition.name }}</p>
+								</div>
+								{% if borrow.returnedCondition %}
+									<div>
+										<label class="block text-sm font-medium text-gray-500">État au retour</label>
+										<p class="text-color-900 font-medium">{{ borrow.returnedCondition }}</p>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+
+						<!-- Informations de l'emprunt -->
+						<div>
+							<h2 class="text-lg font-bold text-color-900 mb-4">Détails de l'emprunt</h2>
+							<div class="space-y-3">
+								<div>
+									<label class="block text-sm font-medium text-gray-500">Statut</label>
+									<span class="inline-block px-3 py-1 text-sm font-medium rounded-full
+                                    {% if borrow.status.name == 'Rendu' %}bg-green-100 text-green-800
+                                    {% elseif borrow.status.name == 'En vérification' %}bg-yellow-100 text-yellow-800
+                                    {% elseif borrow.status.name == 'En retard' %}bg-red-100 text-red-800
+                                    {% else %}bg-blue-100 text-blue-800{% endif %}">
+										{{ borrow.status.name }}
+									</span>
+								</div>
+								<div>
+									<label class="block text-sm font-medium text-gray-500">Date d'emprunt</label>
+									<p class="text-color-900">{{ borrow.borrowDate|date('d/m/Y à H:i') }}</p>
+								</div>
+								<div>
+									<label class="block text-sm font-medium text-gray-500">Date de retour prévue</label>
+									<p class="text-color-900 {% if borrow.returnDueDate < date() and borrow.status.name != 'Rendu' %}text-red-600 font-bold{% endif %}">
+										{{ borrow.returnDueDate|date('d/m/Y') }}
+										{% if borrow.returnDueDate < date() and borrow.status.name != 'Rendu' %}
+											<span class="text-sm">(En retard)</span>
+										{% endif %}
+									</p>
+								</div>
+								{% if borrow.returnDate %}
+									{% set daysBorrowed = borrow.returnDate.diff(borrow.borrowDate).days %}
+									{% set isLate = borrow.returnDate > borrow.returnDueDate %}
+									{% set daysLate = isLate ? borrow.returnDate.diff(borrow.returnDueDate).days : 0 %}
+									<div>
+										<label class="block text-sm font-medium text-gray-500">Date de retour effectif</label>
+										<p class="{% if isLate %}text-red-600 font-bold{% else %}text-green-600 font-medium{% endif %}">
+											{{ borrow.returnDate|date('d/m/Y à H:i') }}
+											{% if isLate %}
+												<span class="text-sm">({{ daysLate }}
+													jour{{ daysLate > 1 ? 's' : '' }}
+													de retard)</span>
+											{% else %}
+												<span class="text-sm">(✓ à temps)</span>
+											{% endif %}
+										</p>
+									</div>
+									<div>
+										<label class="block text-sm font-medium text-gray-500">Durée d'emprunt</label>
+										<p class="text-color-900">{{ daysBorrowed }}
+											jour{{ daysBorrowed > 1 ? 's' : '' }}</p>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+
+					<!-- Informations financières -->
+					{% if borrow.hasDeposit or borrow.additionalFees %}
+						<div class="border-t pt-6">
+							<h2 class="text-lg font-bold text-color-900 mb-4">Informations financières</h2>
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+								{% if borrow.hasDeposit %}
+									<div class="p-4 {% if borrow.isDepositReturned %}bg-green-50 border-green-200{% else %}bg-yellow-50 border-yellow-200{% endif %} border rounded-lg">
+										<label class="block text-sm font-medium mb-2 {% if borrow.isDepositReturned %}text-green-700{% else %}text-yellow-700{% endif %}">Caution</label>
+										<p class="text-2xl font-bold {% if borrow.isDepositReturned %}text-green-900{% else %}text-yellow-900{% endif %}">{{ borrow.depositAmount }}€</p>
+										<p class="text-sm mt-1 {% if borrow.isDepositReturned %}text-green-700{% else %}text-yellow-700{% endif %}">
+											{% if borrow.isDepositReturned %}
+												Restituée
+											{% elseif borrow.status.name == 'Rendu' %}
+												Conservée
+											{% else %}
+												En attente de validation
+											{% endif %}
+										</p>
+									</div>
+								{% endif %}
+
+								{% if borrow.additionalFees %}
+									<div class="p-4 bg-red-50 border-red-200 border rounded-lg">
+										<label class="block text-sm font-medium text-red-700 mb-2">Frais supplémentaires</label>
+										<p class="text-2xl font-bold text-red-900">{{ borrow.additionalFees }}€</p>
+										<p class="text-sm text-red-700 mt-1">Dégâts ou retard prolongé</p>
+									</div>
+								{% endif %}
+
+								{% if borrow.hasDeposit and borrow.additionalFees %}
+									<div class="md:col-span-2 p-4 bg-gray-100 border-gray-300 border rounded-lg">
+										<div class="flex justify-between items-center">
+											<span class="font-medium text-gray-700">Total à régler :</span>
+											<span class="text-2xl font-bold text-gray-900">{{ borrow.depositAmount + borrow.additionalFees }}€</span>
+										</div>
+										<p class="text-sm text-gray-600 mt-1">Caution conservée + frais supplémentaires</p>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					{% endif %}
+
+					<!-- Notes administrateur -->
+					{% if borrow.adminNotes %}
+						<div class="border-t pt-6">
+							<h2 class="text-lg font-bold text-color-900 mb-4">Notes de l'administrateur</h2>
+							<div class="p-4 bg-blue-50 border-blue-200 border rounded-lg">
+								<p class="text-blue-900">{{ borrow.adminNotes }}</p>
+							</div>
+						</div>
+					{% endif %}
+				</div>
+
+				<!-- Actions -->
+				<div class="mt-6 flex justify-end space-x-3">
+					<a href="{{ path('app_borrow_index') }}" onclick="if(history.length > 1){history.back(); return false;}" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+						Retour
+					</a>
+					{% if borrow.status.name != 'Rendu' %}
+						<form method="post" action="{{ path('app_borrow_return', {id: borrow.id}) }}" class="inline">
+							<input type="hidden" name="_token" value="{{ csrf_token('return-borrow-' ~ borrow.id) }}">
+							<button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 cursor-pointer font-medium transition-colors border-0">
+								Retourner le livre
+							</button>
+						</form>
+					{% endif %}
+				</div>
+			</div>
+		</main>
+	</div>
+{% endblock %}

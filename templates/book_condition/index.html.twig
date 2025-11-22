@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}BookCondition index{% endblock %}
+{% block title %}Gestion des conditions de livre{% endblock %}
 
 {% block body %}
-    <h1>BookCondition index</h1>
+    <h1>Gestion des conditions de livre</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
+                <th>Nom</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -19,17 +19,17 @@
                 <td>{{ book_condition.id }}</td>
                 <td>{{ book_condition.name }}</td>
                 <td>
-                    <a href="{{ path('app_book_condition_show', {'id': book_condition.id}) }}">show</a>
-                    <a href="{{ path('app_book_condition_edit', {'id': book_condition.id}) }}">edit</a>
+                    <a href="{{ path('app_book_condition_show', {'id': book_condition.id}) }}">Voir</a>
+                    <a href="{{ path('app_book_condition_edit', {'id': book_condition.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="3">Aucune condition de livre</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_book_condition_new') }}">Create new</a>
+    <a href="{{ path('app_book_condition_new') }}">Ajouter une condition</a>
 {% endblock %}

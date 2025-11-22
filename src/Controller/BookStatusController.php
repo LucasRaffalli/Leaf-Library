@@ -10,8 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/book/status')]
+#[IsGranted('ROLE_ADMIN')] // Seuls les admins peuvent gérer les statuts
 final class BookStatusController extends AbstractController
 {
     #[Route(name: 'app_book_status_index', methods: ['GET'])]

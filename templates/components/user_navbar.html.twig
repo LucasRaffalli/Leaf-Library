@@ -1,26 +1,48 @@
+{% set navbar_title = title|default('Leaf Library') %}
+{% set custom_nav_items = nav_items|default([]) %}
+{% set show_user_links = show_user_links is defined ? show_user_links : true %}
+{% set show_admin_link = show_admin_link is defined ? show_admin_link : true %}
+
 <nav class="bg-white shadow-lg sticky top-0 z-50">
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex justify-between items-center h-16">
 			<div class="flex items-center gap-4">
 				{% include 'components/logo.html.twig' with { size: '40' } %}
-				<span class="text-xl font-bold text-color-900">Leaf Library</span>
+				<span class="text-xl font-bold text-color-900">{{ navbar_title }}</span>
 			</div>
 
-			<div class="flex items-center gap-2">
-				{% if app.user %}
-					<a href="{{ path('app_dashboard') }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if app.request.get('_route') == 'app_dashboard' %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %}">
-						Dashboard
-					</a>
-				{% endif %}
+			<div
+				class="flex items-center gap-2">
+				{% if custom_nav_items is not empty %}
+					{% for item in custom_nav_items %}
+						{% if item == 'separator' %}
+							<div class="w-px h-6 bg-color-300"></div>
+						{% else %}
+							{% set is_active = item.active_pattern is defined and app.request.get('_route') starts with item.active_pattern %}
+							{% set extra_class = item.class is defined ? item.class : '' %}
+							<a href="{{ path(item.route) }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if is_active %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %} {{ extra_class }}">
+								{{ item.label }}
+							</a>
+						{% endif %}
+					{% endfor %}
+				{% else %}
+					{% if app.user and show_user_links %}
+						<a href="{{ path('app_dashboard') }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if app.request.get('_route') == 'app_dashboard' %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %}">
+							Dashboard
+						</a>
+					{% endif %}
 
-				<a href="{{ path('app_catalogue') }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if app.request.get('_route') starts with 'app_catalogue' %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %}">
-					Catalogue
-				</a>
+					{% if show_user_links %}
+						<a href="{{ path('app_catalogue') }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if app.request.get('_route') starts with 'app_catalogue' %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %}">
+							Catalogue
+						</a>
+					{% endif %}
 
-				{% if is_granted('ROLE_ADMIN') %}
-					<a href="{{ path('app_admin_dashboard') }}" class="px-4 py-2 rounded-lg font-medium transition-colors text-color-700 hover:bg-color-100 border border-color-300">
-						Administration
-					</a>
+					{% if is_granted('ROLE_ADMIN') and show_admin_link %}
+						<a href="{{ path('app_admin_dashboard') }}" class="px-4 py-2 rounded-lg font-medium transition-colors text-color-700 hover:bg-color-100 border border-color-300">
+							Administration
+						</a>
+					{% endif %}
 				{% endif %}
 
 				<div class="flex items-center gap-3 ml-2">

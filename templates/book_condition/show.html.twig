@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}BookCondition{% endblock %}
+{% block title %}Gestion des conditions de livre{% endblock %}
 
 {% block body %}
-    <h1>BookCondition</h1>
+    <h1>Conditions de livre</h1>
 
     <table class="table">
         <tbody>
@@ -12,15 +12,15 @@
                 <td>{{ book_condition.id }}</td>
             </tr>
             <tr>
-                <th>Name</th>
+                <th>Nom</th>
                 <td>{{ book_condition.name }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_book_condition_index') }}">back to list</a>
+    <a href="{{ path('app_book_condition_index') }}">← Retour</a>
 
-    <a href="{{ path('app_book_condition_edit', {'id': book_condition.id}) }}">edit</a>
+    <a href="{{ path('app_book_condition_edit', {'id': book_condition.id}) }}">Modifier</a>
 
     {{ include('book_condition/_delete_form.html.twig') }}
 {% endblock %}

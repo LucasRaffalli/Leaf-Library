@@ -6,24 +6,8 @@
 {% endblock %}
 
 {% block admin_content %}
-	<div
-		class="h-screen">
-		<header class="bg-white shadow">
-			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div class="flex justify-between items-center py-6">
-					<div class="flex items-center">
-						{% include 'components/logo.html.twig' with { size: '48' } %}
-						<h1 class="ml-3 text-2xl font-bold text-color-900">Modifier la catégorie</h1>
-					</div>
-					<div class="flex items-center space-x-4">
-						<a href="{{ path('app_category_show', {'id': category.id}) }}" class="text-color-600 hover:text-color-800 font-medium">← Retour aux détails</a>
-					</div>
-				</div>
-			</div>
-		</header>
-
-		<main
-			class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+	<div class="h-screen">
+		<main class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
 			<div class="bg-white shadow rounded-lg overflow-hidden">
 				<div class="px-6 py-6">
 					<div class="flex items-center justify-between mb-6">

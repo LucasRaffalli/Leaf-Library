@@ -1,0 +1,163 @@
+{% extends 'base_no_footer.html.twig' %}
+
+{% block title %}
+  Dashboard Bibliothécaire - Leaf Library
+{% endblock %}
+
+{% block body %}
+  <div class="min-h-screen bg-color-50">
+    {% include 'components/navbar.html.twig' %}
+
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-blue-500 text-white p-6 rounded-lg shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-semibold mb-2">Emprunts Actifs</h3>
+              <p class="text-4xl font-bold">{{ stats.activeBorrows }}</p>
+            </div>
+            <div class="text-5xl opacity-50"></div>
+          </div>
+        </div>
+
+        <div class="bg-red-500 text-white p-6 rounded-lg shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-semibold mb-2">En Retard</h3>
+              <p class="text-4xl font-bold">{{ stats.lateBorrows }}</p>
+            </div>
+            <div class="text-5xl opacity-50"></div>
+          </div>
+        </div>
+
+        <div class="bg-yellow-500 text-white p-6 rounded-lg shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-semibold mb-2">À Vérifier</h3>
+              <p class="text-4xl font-bold">{{ stats.pendingVerification }}</p>
+            </div>
+            <div class="text-5xl opacity-50"></div>
+          </div>
+        </div>
+
+        <div class="bg-green-500 text-white p-6 rounded-lg shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-semibold mb-2">Disponibles</h3>
+              <p class="text-4xl font-bold">{{ stats.availableBooks }}</p>
+              <p class="text-sm mt-1">/
+                {{ stats.totalBooks }}
+                total</p>
+            </div>
+            <div class="text-5xl opacity-50"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-color-900">Retours à Valider</h2>
+            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">{{ stats.pendingVerification }}</span>
+          </div>
+
+          {% if (stats.borrowsToValidate|length) > 0 %}
+            <div class="space-y-3 max-h-96 overflow-y-auto">
+              {% for borrow in stats.borrowsToValidate|slice(0, 5) %}
+                <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded hover:bg-yellow-100 transition">
+                  <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                      <h3 class="font-bold text-color-900">{{ borrow.book.title }}</h3>
+                      <p class="text-sm text-gray-600">{{ borrow.user.name }}
+                        ({{ borrow.user.email }})</p>
+                      <p class="text-xs text-gray-500 mt-1">Retourné le
+                        {{ borrow.returnDate|date('d/m/Y à H:i') }}</p>
+                    </div>
+                    <a href="{{ path('app_admin_borrow_verify', { id: borrow.id }) }}" class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 text-sm font-medium transition">Vérifier</a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            {% if (stats.borrowsToValidate|length) > 5 %}
+              <div class="mt-4 text-center">
+                <a href="{{ path('app_admin_borrow_index') }}" class="text-yellow-600 hover:text-yellow-800 font-medium">
+                  Voir les
+                  {{ (stats.borrowsToValidate|length) - 5 }}
+                  autres →
+                </a>
+              </div>
+            {% endif %}
+          {% else %}
+            <div class="text-center py-8 text-gray-500">
+              <p class="text-xl"></p>
+              <p class="mt-2">Aucun retour en attente de validation</p>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-bold text-color-900 mb-4">Statistiques Bibliothèque</h2>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-600">Taux d'occupation</span>
+                <span class="font-medium">{{ (stats.borrowedBooks / stats.totalBooks * 100)|number_format(1) }}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-color-600 h-2 rounded-full" style="width: {{ (stats.borrowedBooks / stats.totalBooks * 100)|round }}%"></div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center py-3 border-b">
+              <span class="text-gray-600">Livres empruntés</span>
+              <span class="font-bold text-color-900">{{ stats.borrowedBooks }}</span>
+            </div>
+
+            <div class="flex justify-between items-center py-3 border-b">
+              <span class="text-gray-600">Livres disponibles</span>
+              <span class="font-bold text-green-600">{{ stats.availableBooks }}</span>
+            </div>
+
+            <div class="flex justify-between items-center py-3 border-b">
+              <span class="text-gray-600">Total livres</span>
+              <span class="font-bold text-color-900">{{ stats.totalBooks }}</span>
+            </div>
+
+            <div class="flex justify-between items-center py-3">
+              <span class="text-gray-600">Utilisateurs actifs</span>
+              <span class="font-bold text-color-900">{{ stats.totalUsers }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-bold text-color-900 mb-4">Actions Rapides</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a href="{{ path('app_admin_borrow_index') }}" class="flex items-center justify-center bg-color-600 text-white p-4 rounded-lg hover:bg-color-700 transition">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>Gérer tous les Emprunts
+          </a>
+
+          <a href="{{ path('app_catalogue') }}" class="flex items-center justify-center bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>Consulter le Catalogue
+          </a>
+
+          {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_admin_dashboard') }}" class="flex items-center justify-center bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700 transition">
+              <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>Admin Dashboard
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+  </div>
+{% endblock %}

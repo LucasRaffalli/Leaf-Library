@@ -1,40 +1,46 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_no_footer.html.twig' %}
 
 {% block title %}Dashboard - Leaf Library
 {% endblock %}
 
 {% block body %}
-	<div
-		class="min-h-screen bg-color-50">
-		{% include 'components/user_navbar.html.twig' %}
+	<div class="min-h-screen bg-color-50">
+		{% include 'components/navbar.html.twig' %}
 
-		<main
-			class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+		<main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
 			<div class="mb-8">
 				<h1 class="text-3xl font-black text-color-900 uppercase tracking-tight">👋 Bienvenue,
-					{{ user.name ?? user.email }}</h1>
+					{{ stats.user.name ?? stats.user.email }}</h1>
 				<p class="mt-2 text-color-600">Votre espace personnel</p>
 			</div>
 
-			<div
-				class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 				<div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
 					<div class="flex items-center justify-between">
 						<div>
 							<p class="text-sm font-medium text-color-500 uppercase tracking-wide">Mes emprunts</p>
-							<p class="mt-2 text-3xl font-bold text-color-900">0</p>
+							<p class="mt-2 text-3xl font-bold text-color-900">{{ stats.activeBorrowsCount }}</p>
+							{% if stats.overdueBorrowsCount > 0 %}
+								<p class="mt-1 text-sm text-red-600 font-semibold">
+									{{ stats.overdueBorrowsCount }}
+									en retard</p>
+							{% else %}
+								<p class="mt-1 text-sm text-green-600">✓ Tous à jour</p>
+							{% endif %}
+
 						</div>
-						<div class="p-3 bg-blue-100 rounded-lg">
-							<svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+						<div class="p-3 {% if stats.overdueBorrowsCount > 0 %}bg-red-100{% else %}bg-blue-100{% endif %} rounded-lg">
+							<svg class="w-8 h-8 {% if stats.overdueBorrowsCount > 0 %}text-red-600{% else %}text-blue-600{% endif %}" fill="none" stroke="currentColor" viewbox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
 							</svg>
 						</div>
 					</div>
-					<div class="mt-4 text-sm text-color-500">
-						Livres actuellement empruntés
+					<div class="mt-4">
+						<a href="{{ path('app_borrow_index') }}" class="text-sm text-color-600 hover:text-color-800 font-medium">
+							Voir mes emprunts →
+						</a>
 					</div>
 				</div>
-
 				<div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
 					<div class="flex items-center justify-between">
 						<div>
@@ -72,26 +78,65 @@
 				</div>
 			</div>
 
-			<div
-				class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 				<div class="bg-white rounded-lg shadow">
 					<div class="px-6 py-4 border-b border-color-200">
-						<h2 class="text-lg font-bold text-color-900">Mon activité</h2>
+						<h2 class="text-lg font-bold text-color-900">Mes emprunts en cours</h2>
 					</div>
 					<div class="p-6">
-						<div class="flex items-center gap-3 p-3 bg-color-50 rounded-lg">
-							<div class="p-2 bg-color-200 rounded-lg">
-								<svg class="w-5 h-5 text-color-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-								</svg>
+						{% if stats.activeBorrows is empty %}
+							<div class="flex items-center gap-3 p-3 bg-color-50 rounded-lg">
+								<div class="p-2 bg-color-200 rounded-lg">
+									<svg class="w-5 h-5 text-color-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+									</svg>
+								</div>
+								<div>
+									<p class="text-sm text-color-700">Aucun emprunt en cours</p>
+								</div>
 							</div>
-							<div>
-								<p class="text-sm text-color-700">Aucune activité récente</p>
+						{% else %}
+							<div class="space-y-3">
+								{% for borrow in stats.activeBorrows %}
+									{% set isOverdue = borrow.returnDueDate < date() %}
+									<div class="border rounded-lg p-4 {% if isOverdue %}border-red-300 bg-red-50{% else %}border-color-200{% endif %}">
+										<div class="flex items-start justify-between">
+											<div class="flex-1">
+												<h3 class="font-semibold text-color-900">{{ borrow.book.title }}</h3>
+												<p class="text-sm text-color-600 mt-1">{{ borrow.book.author }}</p>
+												<div class="flex items-center gap-4 mt-2 text-xs">
+													<span class="text-color-500">
+														Emprunté le
+														{{ borrow.borrowDate|date('d/m/Y') }}
+													</span>
+													<span class="{% if isOverdue %}text-red-600 font-semibold{% else %}text-color-500{% endif %}">
+														Retour prévu
+														{{ borrow.returnDueDate|date('d/m/Y') }}
+													</span>
+												</div>
+												{% if isOverdue %}
+													<span class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-800 mt-2">
+														En retard
+													</span>
+												{% endif %}
+											</div>
+											<a href="{{ path('app_borrow_show', {id: borrow.id}) }}" class="text-color-600 hover:text-color-900">
+												<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+												</svg>
+											</a>
+										</div>
+									</div>
+								{% endfor %}
 							</div>
-						</div>
+							<div class="mt-4 pt-4 border-t border-color-200">
+								<a href="{{ path('app_borrow_index') }}" class="text-sm text-color-600 hover:text-color-900 font-medium">
+									Voir tous mes emprunts →
+								</a>
+							</div>
+						{% endif %}
 					</div>
 				</div>
-
 				<div class="bg-white rounded-lg shadow">
 					<div class="px-6 py-4 border-b border-color-200">
 						<h2 class="text-lg font-bold text-color-900">Mon profil</h2>
@@ -100,11 +145,11 @@
 						<div class="space-y-3">
 							<div>
 								<p class="text-sm text-color-500">Nom</p>
-								<p class="font-medium text-color-900">{{ user.name ?? 'Non défini' }}</p>
+								<p class="font-medium text-color-900">{{ stats.user.name ?? 'Non défini' }}</p>
 							</div>
 							<div>
 								<p class="text-sm text-color-500">Email</p>
-								<p class="font-medium text-color-900">{{ user.email }}</p>
+								<p class="font-medium text-color-900">{{ stats.user.email }}</p>
 							</div>
 							<div class="mt-4">
 								<a href="{{ path('app_profile') }}" class="text-sm text-color-600 hover:text-color-900 font-medium">

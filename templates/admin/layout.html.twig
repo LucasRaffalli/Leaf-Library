@@ -1,41 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_no_footer.html.twig' %}
 
 {% block body %}
-	<div
-		class="bg-color-50">
-		<nav class="bg-white shadow-lg sticky top-0 z-50">
-			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div
-					class="flex justify-between items-center h-16">
-					<div class="flex items-center gap-4">
-						{% include 'components/logo.html.twig' with { size: '40' } %}
-						<span class="text-xl font-bold text-color-900">Admin Panel</span>
-					</div>
-
-					<div class="flex items-center gap-2">
-						<a href="{{ path('app_dashboard') }}" class="px-4 py-2 rounded-lg font-medium transition-colors text-color-700 hover:bg-color-100 border border-color-300">
-							Dashboard Utilisateur
-						</a>
-						<div class="w-px h-6 bg-color-300"></div>
-						<a href="{{ path('app_admin_dashboard') }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if app.request.get('_route') starts with 'app_admin_dashboard' %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %}">
-							Dashboard
-						</a>
-						<a href="{{ path('app_book_index') }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if app.request.get('_route') starts with 'app_book' %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %}">
-							Livres
-						</a>
-						<a href="{{ path('app_category_index') }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if app.request.get('_route') starts with 'app_category' %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %}">
-							Catégories
-						</a>
-
-						<div class="flex items-center gap-3">
-							<a href="{{ path('app_logout') }}" class="px-3 py-2 text-sm text-color-600 hover:text-color-900 hover:bg-color-100 rounded-lg transition-colors">
-								Déconnexion
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</nav>
+	<div class="bg-color-50 min-h-screen">
+		{% include 'components/navbar.html.twig' %}
 
 		<main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
 			{% block admin_content %}{% endblock %}

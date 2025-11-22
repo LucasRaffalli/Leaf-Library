@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -18,12 +19,24 @@ class Book
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le titre du livre ne peut pas être vide')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères'
+    )]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'L\'auteur ne peut pas être vide')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Le nom de l\'auteur ne peut pas dépasser {{ limit }} caractères'
+    )]
     private ?string $author = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Assert\NotBlank(message: 'Le montant de la caution est requis')]
+    #[Assert\PositiveOrZero(message: 'Le montant de la caution doit être positif ou nul')]
     private ?string $depositAmount = null;
 
     #[ORM\Column]
@@ -47,9 +60,13 @@ class Book
     #[ORM\JoinTable(name: 'book_categories')]
     private Collection $categories;
 
+    #[ORM\OneToMany(targetEntity: Borrow::class, mappedBy: 'book')]
+    private Collection $borrows;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->borrows = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -178,6 +195,33 @@ class Book
 
         return $this;
     }
+
+    public function getBorrows(): Collection
+    {
+        return $this->borrows;
+    }
+
+    public function addBorrow(Borrow $borrow): static
+    {
+        if (!$this->borrows->contains($borrow)) {
+            $this->borrows->add($borrow);
+            $borrow->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBorrow(Borrow $borrow): static
+    {
+        if ($this->borrows->removeElement($borrow)) {
+            if ($borrow->getBook() === $this) {
+                $borrow->setBook(null);
+            }
+        }
+
+        return $this;
+    }
+
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {

@@ -1,0 +1,170 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Vérifier le retour - Admin{% endblock %}
+
+{% block admin_content %}
+	<div class="mb-8">
+		<div class="flex items-center justify-between">
+			<div>
+				<h1 class="text-3xl font-black text-color-900 uppercase tracking-tight">Vérification du retour</h1>
+				<p class="mt-2 text-color-600">Contrôler l'état du livre et gérer la caution</p>
+			</div>
+			<a href="{{ path('app_admin_borrow_index') }}" class="px-4 py-2 border border-color-300 rounded-md text-color-700 hover:bg-color-50">
+				← Retour à la liste
+			</a>
+		</div>
+	</div>
+
+	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+		<!-- Informations de l'emprunt -->
+		<div class="lg:col-span-1">
+			<div class="bg-white rounded-lg shadow p-6">
+				<h2 class="text-lg font-bold text-color-900 mb-4">Informations</h2>
+				
+				<div class="space-y-4">
+					<div>
+						<label class="block text-sm font-medium text-color-700 mb-1">Utilisateur</label>
+						<p class="text-color-900 font-medium">{{ borrow.user.name ?? borrow.user.email }}</p>
+						<p class="text-sm text-color-600">{{ borrow.user.email }}</p>
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-color-700 mb-1">Livre</label>
+						<p class="text-color-900 font-medium">{{ borrow.book.title }}</p>
+						<p class="text-sm text-color-600">{{ borrow.book.author }}</p>
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-color-700 mb-1">État à l'emprunt</label>
+						<p class="text-color-900">{{ borrow.book.condition.name }}</p>
+					</div>
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label class="block text-sm font-medium text-color-700 mb-1">Emprunté le</label>
+							<p class="text-color-900">{{ borrow.borrowDate|date('d/m/Y') }}</p>
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-color-700 mb-1">Retourné le</label>
+							<p class="text-color-900">{{ borrow.returnDate|date('d/m/Y') }}</p>
+						</div>
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-color-700 mb-1">Durée</label>
+						<p class="text-color-900">{{ (borrow.returnDate.diff(borrow.borrowDate).days) }} jours</p>
+					</div>
+
+					{% if borrow.hasDeposit %}
+						<div class="p-3 bg-yellow-50 border border-yellow-200 rounded">
+							<label class="block text-sm font-medium text-yellow-800 mb-1">Caution versée</label>
+							<p class="text-xl font-bold text-yellow-900">{{ borrow.depositAmount }}€</p>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		<div class="lg:col-span-2">
+			<div class="bg-white rounded-lg shadow p-6">
+				<h2 class="text-lg font-bold text-color-900 mb-6">Validation du retour</h2>
+
+				<form method="post" action="{{ path('app_admin_borrow_validate', {id: borrow.id}) }}" class="space-y-6">
+					<input type="hidden" name="_token" value="{{ csrf_token('validate-borrow-' ~ borrow.id) }}">
+
+					<div>
+						<label for="returned_condition" class="block text-sm font-medium text-color-700 mb-2">
+							État du livre au retour <span class="text-red-500">*</span>
+						</label>
+						<select name="returned_condition" id="returned_condition" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color-500">
+							<option value="">-- Sélectionner l'état --</option>
+							{% for condition in conditions %}
+								<option value="{{ condition.id }}" {% if condition.id == borrow.book.condition.id %}selected{% endif %}>
+									{{ condition.name }}
+								</option>
+							{% endfor %}
+						</select>
+						<p class="mt-1 text-sm text-color-500">Comparez avec l'état initial : <strong>{{ borrow.book.condition.name }}</strong></p>
+					</div>
+
+					{% if borrow.hasDeposit %}
+					<div class="border-t border-color-200 pt-4">
+						<label class="block text-sm font-medium text-color-700 mb-3">
+							Gestion de la caution ({{ borrow.depositAmount }}€)
+						</label>
+						<div class="space-y-3">
+							<label class="flex items-start p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-color-50 transition has-[:checked]:border-green-500 has-[:checked]:bg-green-50">
+								<input type="radio" 
+									   name="caution_action" 
+									   value="returned" 
+									   checked
+									   class="mt-1 h-4 w-4 text-green-600 focus:ring-green-500"
+									   onchange="document.getElementById('additional-fee-section').classList.add('hidden'); document.getElementById('additional_fee').value='0';">
+								<span class="ml-3 flex-1">
+									<strong class="text-green-700 block">✓ Restituer la caution</strong>
+									<span class="text-sm text-color-600 block mt-1">Livre en bon état, pas de dégradation</span>
+								</span>
+							</label>
+
+							<label class="flex items-start p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-color-50 transition has-[:checked]:border-orange-500 has-[:checked]:bg-orange-50">
+								<input type="radio" 
+									   name="caution_action" 
+									   value="kept"
+									   class="mt-1 h-4 w-4 text-orange-600 focus:ring-orange-500"
+									   onchange="document.getElementById('additional-fee-section').classList.add('hidden'); document.getElementById('additional_fee').value='0';">
+								<span class="ml-3 flex-1">
+									<strong class="text-orange-700 block">⚠ Conserver la caution</strong>
+									<span class="text-sm text-color-600 block mt-1">Livre abîmé, caution suffisante pour couvrir les dégâts</span>
+								</span>
+							</label>
+
+							<label class="flex items-start p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-color-50 transition has-[:checked]:border-red-500 has-[:checked]:bg-red-50">
+								<input type="radio" 
+									   name="caution_action" 
+									   value="additional"
+									   class="mt-1 h-4 w-4 text-red-600 focus:ring-red-500"
+									   onchange="document.getElementById('additional-fee-section').classList.remove('hidden');">
+								<span class="ml-3 flex-1">
+									<strong class="text-red-700 block">Conserver + frais supplémentaires</strong>
+									<span class="text-sm text-color-600 block mt-1">Dégâts importants dépassant le montant de la caution</span>
+								</span>
+							</label>
+						</div>
+					</div>
+					{% endif %}
+
+					<div id="additional-fee-section" class="{% if borrow.hasDeposit %}hidden{% endif %}">
+						<label for="additional_fee" class="block text-sm font-medium text-color-700 mb-2">
+							{% if borrow.hasDeposit %}
+								Frais supplémentaires (en plus de la caution conservée)
+							{% else %}
+								Frais à facturer
+							{% endif %}
+						</label>
+						<div class="relative">
+							<input type="number" name="additional_fee" id="additional_fee" step="0.01" min="0" value="0" class="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color-500">
+							<span class="absolute right-3 top-2.5 text-color-500 font-medium">€</span>
+						</div>
+						<p class="mt-1 text-sm text-color-500">Retard prolongé, livre perdu ou dégâts très importants</p>
+					</div>
+
+					<div>
+						<label for="notes" class="block text-sm font-medium text-color-700 mb-2">
+							Notes / Observations (optionnel)
+						</label>
+						<textarea name="notes" id="notes" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color-500" placeholder="Ex: Livre en bon état, petite trace de pliure sur la couverture..."></textarea>
+					</div>
+
+					<div class="flex justify-end gap-3 pt-4 border-t border-color-200">
+						<a href="{{ path('app_admin_borrow_index') }}" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+							Annuler
+						</a>
+						<button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium border-0">
+							Valider le retour
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

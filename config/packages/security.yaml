@@ -16,7 +16,10 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            user_checker: App\Security\UserChecker
             custom_authenticator: App\Security\LoginFormAuthenticator
+            entry_point: App\Security\LoginFormAuthenticator
+            
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -26,9 +29,7 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
-                # by default, the feature is enabled by checking a checkbox in the
-                # login form, uncomment the following line to always enable it.
-                #always_remember_me: true
+                always_remember_me: false
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -38,9 +39,30 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
+    
+    # Hiérarchie des rôles : ADMIN hérite de LIBRARIAN qui hérite de USER
+    role_hierarchy:
+        ROLE_LIBRARIAN: ROLE_USER
+        ROLE_ADMIN: ROLE_LIBRARIAN
+    
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        # Routes admin spécifiques (ordre important!)
+        - { path: ^/admin/dashboard, roles: ROLE_ADMIN }
+        
+        # Gestion des emprunts accessible aux bibliothécaires
+        - { path: ^/admin/emprunts, roles: ROLE_LIBRARIAN }
+        
+        # Routes CRUD (livres, catégories, etc.) : ADMIN only
+        - { path: ^/book, roles: ROLE_ADMIN }
+        - { path: ^/category, roles: ROLE_ADMIN }
+        - { path: ^/book-condition, roles: ROLE_ADMIN }
+        - { path: ^/book-status, roles: ROLE_ADMIN }
+        - { path: ^/borrow-status, roles: ROLE_ADMIN }
+        
+        # Routes user
         - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/emprunts, roles: ROLE_USER }
+        - { path: ^/dashboard, roles: ROLE_USER }
 
 when@test:
     security:
