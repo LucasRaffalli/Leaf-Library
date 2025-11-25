@@ -461,27 +461,6 @@ php bin/console doctrine:fixtures:load --no-interaction
 
 ---
 
-## 🚧 **10. Roadmap**
-
-### **Priorité Haute**
-- [ ] HTTP Security Headers (NelmioSecurityBundle)
-- [ ] Tests d'intégration (contrôleurs)
-- [ ] PHPStan niveau 6+
-
-### **Priorité Moyenne**
-- [ ] 2FA (Authentification à 2 facteurs)
-- [ ] Soft delete généralisé
-- [ ] ENUM pour statuts (PHP 8.1+)
-- [ ] API REST (API Platform)
-
-### **Nice to Have**
-- [ ] Notifications email (emprunts, retards)
-- [ ] Export PDF des emprunts
-- [ ] Dashboard analytics avancé
-- [ ] Système de réservation
-
----
-
 ## 📚 **11. Documentation**
 
 ### **Guides**
