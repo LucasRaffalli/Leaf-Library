@@ -11,8 +11,7 @@
 				<span class="text-xl font-bold text-color-900">{{ navbar_title }}</span>
 			</div>
 
-			<div
-				class="flex items-center gap-2">
+			<div class="flex items-center gap-2">
 				{% if custom_nav_items is not empty %}
 					{% for item in custom_nav_items %}
 						{% if item == 'separator' %}
@@ -20,7 +19,7 @@
 						{% else %}
 							{% set is_active = item.active_pattern is defined and app.request.get('_route') starts with item.active_pattern %}
 							{% set extra_class = item.class is defined ? item.class : '' %}
-							<a href="{{ path(item.route) }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if is_active %}bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %} {{ extra_class }}">
+							<a href="{{ path(item.route) }}" class="px-4 py-2 rounded-lg font-medium transition-colors {% if is_active %} **:bg-color-600 text-white{% else %}text-color-700 hover:bg-color-100{% endif %} {{ extra_class }}">
 								{{ item.label }}
 							</a>
 						{% endif %}
